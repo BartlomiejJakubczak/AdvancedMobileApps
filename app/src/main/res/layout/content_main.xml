@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+    tools:context="com.politechnika.advancedmobileapps.MainActivity"
+    tools:showIn="@layout/activity_main">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/sample_main_layout">
+
+        <fragment
+            android:id="@+id/log_fragment"
+            android:name="com.politechnika.advancedmobileapps.logger.LogFragment"
+            android:layout_width="match_parent"
+            android:layout_height="401dp"
+            android:layout_weight="4" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="6dp"
+            android:layout_weight="1"
+            android:onClick="onClickSwitchActivityRecognition"
+            android:text="@string/enable_disable_button_activity_recognition" />
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="match_parent"
+            android:layout_height="6dp"
+            android:layout_weight="1"
+            android:onClick="onClickClearLogs"
+            android:text="@string/clear_logs" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">AdvancedMobileApps</string>
+    <string name="no_thanks_activity_permission_rational">No, thanks</string>
+    <string name="continue_activity_permission_rational">Agree</string>
+    <string name="main_message_activity_permission_rational">Please permit usage of transition API.</string>
+    <string name="details_message_activity_permission_rational">Without it you won\'t be able to use the app.</string>
+    <string name="enable_disable_button_activity_recognition">Toggle Activity Recognition</string>
+    <string name="action_settings">Settings</string>
+    <string name="clear_logs">Clear logs</string>
+</resources>
