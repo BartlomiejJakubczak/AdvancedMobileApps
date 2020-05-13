@@ -30,12 +30,21 @@
             android:text="@string/enable_disable_button_activity_recognition" />
 
         <Button
+            android:id="@+id/button2"
+            android:layout_width="match_parent"
+            android:layout_height="6dp"
+            android:layout_weight="1"
+            android:onClick="onClickSwitchLocationRecognition"
+            android:text="@string/toggle_location_recognition" />
+
+        <Button
             android:id="@+id/button"
             android:layout_width="match_parent"
             android:layout_height="6dp"
             android:layout_weight="1"
             android:onClick="onClickClearLogs"
             android:text="@string/clear_logs" />
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

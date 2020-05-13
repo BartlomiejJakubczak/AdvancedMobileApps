@@ -3,8 +3,13 @@
     package="com.politechnika.advancedmobileapps">
     <!-- Required for 28 and below. -->
     <uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION" />
-<!--    &lt;!&ndash; Required for 29+. &ndash;&gt;-->
-<!--    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />-->
+    <!-- Required for 29+. -->
+    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
+    <!-- Location -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
 
     <application
         android:allowBackup="true"
@@ -14,14 +19,19 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity">
+            android:name=".MainActivity"
+            android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".permissions.PermissionRationalActivity" />
+
+        <service
+            android:name=".location.LocationUpdatesService"
+            android:enabled="true"
+            android:exported="true" />
     </application>
 
 </manifest>
