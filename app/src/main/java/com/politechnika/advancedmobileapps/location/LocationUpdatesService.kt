@@ -9,10 +9,13 @@ import android.os.*
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import androidx.room.Room
+import androidx.room.RoomDatabase
 import com.google.android.gms.location.*
 import com.politechnika.advancedmobileapps.MainActivity
 import com.politechnika.advancedmobileapps.R
 import com.politechnika.advancedmobileapps.SharedPrefsStorage
+import com.politechnika.advancedmobileapps.room.LocationDatabase
 import java.text.DateFormat
 import java.util.*
 
@@ -48,6 +51,7 @@ class LocationUpdatesService : Service() {
     private lateinit var mFusedLocationClient: FusedLocationProviderClient
     private lateinit var mServiceHandler: Handler
     private lateinit var mNotificationManager: NotificationManager
+    private lateinit var mDatabase: LocationDatabase
 
     override fun onBind(intent: Intent?): IBinder? {
         stopForeground(true)
@@ -56,12 +60,14 @@ class LocationUpdatesService : Service() {
     }
 
     override fun onRebind(intent: Intent?) {
+        Log.d(TAG, "onRebind called.")
         stopForeground(true)
         mChangingConfiguration = false
         super.onRebind(intent)
     }
 
     override fun onUnbind(intent: Intent?): Boolean {
+        Log.d(TAG, "onUnbind called.")
         if (!mChangingConfiguration && SharedPrefsStorage.requestingLocationUpdates(this)) {
             startForeground(NOTIFICATION_ID, getNotification())
         }
@@ -69,10 +75,13 @@ class LocationUpdatesService : Service() {
     }
 
     override fun onDestroy() {
+        Log.d(TAG, "onDestroy called.")
         mServiceHandler.removeCallbacksAndMessages(null)
+        mDatabase.close()
     }
 
     override fun onCreate() {
+        Log.d(TAG, "onCreate called.")
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         mLocationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
@@ -80,6 +89,11 @@ class LocationUpdatesService : Service() {
                 onNewLocation(locationResult.lastLocation)
             }
         }
+        mDatabase = Room.databaseBuilder(
+            applicationContext,
+            LocationDatabase::class.java,
+            "db"
+        ).build()
         createLocationRequest()
         getLastLocation()
         val handlerThread = HandlerThread(TAG)
@@ -129,6 +143,10 @@ class LocationUpdatesService : Service() {
 
     private fun onNewLocation(location: Location) {
         mLocation = location
+        val locationEntity = com.politechnika.advancedmobileapps.room.Location(mLocation?.latitude, mLocation?.longitude, System.currentTimeMillis()/1000)
+        Thread {
+            mDatabase.locationDao().insertAll(locationEntity)
+        }.start()
         // Notify anyone listening for broadcasts about the new location.
         val intent = Intent(ACTION_BROADCAST)
         intent.putExtra(EXTRA_LOCATION, location)

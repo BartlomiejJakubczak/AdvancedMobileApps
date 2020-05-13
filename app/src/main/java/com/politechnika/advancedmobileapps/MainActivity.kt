@@ -82,6 +82,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        Log.d(TAG, "onCreate called.")
         super.onCreate(savedInstanceState)
         setViews()
         mTransitionsReceiver = TransitionsReceiver()
@@ -116,6 +117,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun unregisterBroadcast() {
         unregisterReceiver(mTransitionsReceiver)
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mTransitionsReceiver)
         broadcastRegistered = false
     }
 
@@ -127,7 +129,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onStart() {
+        Log.d(TAG, "onStart called.")
         super.onStart()
+        Log.d(TAG, "Binding the service.")
         bindService(
             Intent(this, LocationUpdatesService::class.java), mServiceConnection,
             Context.BIND_AUTO_CREATE
@@ -135,6 +139,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onResume() {
+        Log.d(TAG, "onResume called.")
         super.onResume()
         if (!broadcastRegistered) {
             Log.d(TAG, "Registering broadcast receiver.")
@@ -143,19 +148,21 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onPause() {
+        Log.d(TAG, "onPause called.")
         if (activityTrackingEnabled) {
             disableActivityTransitions()
         }
+        unregisterBroadcast()
         super.onPause()
     }
 
     override fun onStop() {
+        Log.d(TAG, "onStop called.")
         if (mBound) {
+            Log.d(TAG, "Unbinding the service.")
             unbindService(mServiceConnection)
             mBound = false
         }
-        printToScreen("Unregistering broadcast receiver.")
-        unregisterBroadcast()
         super.onStop()
     }
 
@@ -320,7 +327,6 @@ class MainActivity : AppCompatActivity() {
                 val location: Location? = intent?.getParcelableExtra(LocationUpdatesService.EXTRA_LOCATION)
                 if (location != null) {
                     printToScreen(LocationUpdatesService.getLocationText(location))
-                    //TODO zapisz do Rooma
                 }
             }
         }
